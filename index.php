@@ -9,8 +9,9 @@ if(isset($_COOKIE['user_id'])){
 }
 
 $select_likes = $conn->prepare("SELECT * FROM `likes` WHERE user_id = ?");
+$select_likes->bind_param("s", $user_id)
 $select_likes->execute([$user_id]);
-$total_likes = $select_likes->rowCount();
+$total_likes = $select_likes;
 
 $select_comments = $conn->prepare("SELECT * FROM `comments` WHERE user_id = ?");
 $select_comments->execute([$user_id]);
