@@ -1,10 +1,7 @@
 <?php
+   $env = parse_ini_file("../.env");
 
-   $db_name = 'mysql:host=localhost;dbname=course_db';
-   $user_name = 'root';
-   $user_password = '';
-
-   $conn = new PDO($db_name, $user_name, $user_password);
+   $conn = new mysqli($env["DB_HOST"], $env["DB_USER"], $env["DB_PASSWORD"], $env["DB_NAME"], null, $env["DB_SOCKET"]);
 
    function unique_id() {
       $str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
@@ -16,5 +13,4 @@
       }
       return implode($rand);
    }
-
 ?>
