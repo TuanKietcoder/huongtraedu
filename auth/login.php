@@ -1,39 +1,40 @@
 <?php
-require_once 'components/connect.php';
+require_once "include/@connect.php";
 
-session_set_cookie_params(3600 * 24 * 7);
-session_start();
+if ($logged_in) {
+    header("Location: /");
+    exit;
+}
 
 if (isset($_POST["submit"])) {
     $email = $_POST["email"];
     $pass = sha1($_POST['pass']);
 
-    $select_user = $db->prepare("SELECT * FROM `users` WHERE email = ? AND password = ? LIMIT 1");
-    $select_user->bind_param("ss", $email, $pass);
-    $select_user->execute();
-    $row = $select_user->fetch_assoc();
+    $login_stmt = $db->prepare("SELECT * FROM `users` WHERE email = ? AND password = ? LIMIT 1");
+    $login_stmt->bind_param("ss", $email, $pass);
+    $login_stmt->execute();
+    $login_result = $login_stmt->get_result()->fetch_assoc();
 
-    if($select_user->length > 0){
-        setcookie('user_id', $row['id'], time() + 60*60*24*30, '/');
-        header('location:index.php');
-    }else{
-        $message = 'Email hoặc mật khẩu không chính xác!';
+    if ($login) {
+        $_SESSION["user_id"] = $login_result["id"];
+        $_SESSION["name"] = $login_result["name"];
+        $_SESSION["password"] = $login_result["password"];
+        header("Location: /");
+        exit;
     }
+
+    $message = "Email hoặc mật khẩu không chính xác!";
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/script.js" defer></script>
-    <title>Trang chủ</title>
+    <?php include "include/head.php" ?>
 </head>
 <body>
-    <?php include 'components/user_header.php'; ?>
+    <?php include "include/user_header.php"; ?>
+    
     <section class="form-container">
         <form action method="post" enctype="multipart/form-data" class="login">
             <h3>Chào mừng trở lại!</h3>
@@ -45,6 +46,7 @@ if (isset($_POST["submit"])) {
             <input type="submit" name="submit" value="Đăng nhập" class="btn">
         </form>
     </section>
-    <?php include 'components/footer.html'; ?>
+
+    <?php include "include/footer.html"; ?>
 </body>
 </html>

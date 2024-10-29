@@ -1,16 +1,13 @@
 <?php
-    $env = parse_ini_file(".env");
+    require_once "@function.php";
 
+    $env = parse_ini_file(".env");
     $db = new mysqli($env["DB_HOST"], $env["DB_USER"], $env["DB_PASSWORD"], $env["DB_NAME"], null, $env["DB_SOCKET"]);
 
-    function unique_id() {
-        $str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-        $rand = array();
-        $length = strlen($str) - 1;
-        for ($i = 0; $i < 20; $i++) {
-            $n = mt_rand(0, $length);
-            $rand[] = $str[$n];
-        }
-        return implode($rand);
-    }
+    session_set_cookie_params(3600 * 24 * 7);
+    session_start();
+    $user_id = getValueFromSession("user_id");
+    $name = getValueFromSession("name");
+    $password = getValueFromSession("password");
+    $logged_in = isset($user_id, $name, $password)
 ?>

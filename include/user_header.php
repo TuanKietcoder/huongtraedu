@@ -44,7 +44,7 @@ if(isset($message)){
             <a href="login.php" class="option-btn" style="font-size: 16px;padding: 12px;">Đăng nhập</a>
             <a href="register.php" class="option-btn" style="padding: 12px;">Đăng kí</a>
          </div>
-         <a href="components/user_logout.php" onclick="return confirm('Bạn có muốn đăng xuất?');" class="delete-btn">Đăng xuất</a>
+         <a href="/auth/logout.php" onclick="return confirm('Bạn có muốn đăng xuất?');" class="delete-btn">Đăng xuất</a>
          <?php
             }else{
          ?>
