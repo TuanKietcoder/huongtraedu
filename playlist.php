@@ -1,6 +1,6 @@
 <?php
 
-include 'components/connect.php';
+require_once "include/@connect.php";
 
 if(isset($_COOKIE['user_id'])){
    $user_id = $_COOKIE['user_id'];
@@ -60,7 +60,7 @@ if(isset($_POST['save_list'])){
 </head>
 <body>
 
-<?php include 'components/user_header.php'; ?>
+<?php include 'include/user_header.php'; ?>
 
 <!-- playlist section starts  -->
 
@@ -181,7 +181,7 @@ if(isset($_POST['save_list'])){
 
 
 
-<?php include 'components/footer.php'; ?>
+<?php include 'include/footer.php'; ?>
 
 <!-- custom js file link  -->
 <script src="/assets/js/script.js"></script>

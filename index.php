@@ -1,6 +1,5 @@
 <?php
-
-include 'components/connect.php';
+require_once "include/@connect.php";
 
 if(isset($_COOKIE['user_id'])){
    $user_id = $_COOKIE['user_id'];
@@ -40,7 +39,7 @@ $total_bookmarked = $select_bookmark->rowCount();
 </head>
 <body>
 
-<?php include 'components/user_header.php'; ?>
+<?php include 'include/user_header.php'; ?>
 
 <!-- quick select section starts  -->
 
@@ -159,7 +158,7 @@ $total_bookmarked = $select_bookmark->rowCount();
 
 
 <!-- footer section starts  -->
-<?php include 'components/footer.php'; ?>
+<?php include 'include/footer.php'; ?>
 <!-- footer section ends -->
 
 <!-- custom js file link  -->
