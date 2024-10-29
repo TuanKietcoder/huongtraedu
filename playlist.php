@@ -22,15 +22,15 @@ if(isset($_POST['save_list'])){
       $list_id = $_POST['list_id'];
       $list_id = filter_var($list_id, FILTER_SANITIZE_STRING);
 
-      $select_list = $conn->prepare("SELECT * FROM `bookmark` WHERE user_id = ? AND playlist_id = ?");
+      $select_list = $db->prepare("SELECT * FROM `bookmark` WHERE user_id = ? AND playlist_id = ?");
       $select_list->execute([$user_id, $list_id]);
 
       if($select_list->rowCount() > 0){
-         $remove_bookmark = $conn->prepare("DELETE FROM `bookmark` WHERE user_id = ? AND playlist_id = ?");
+         $remove_bookmark = $db->prepare("DELETE FROM `bookmark` WHERE user_id = ? AND playlist_id = ?");
          $remove_bookmark->execute([$user_id, $list_id]);
          $message[] = 'Danh sách phát đã bị xóa!';
       }else{
-         $insert_bookmark = $conn->prepare("INSERT INTO `bookmark`(user_id, playlist_id) VALUES(?,?)");
+         $insert_bookmark = $db->prepare("INSERT INTO `bookmark`(user_id, playlist_id) VALUES(?,?)");
          $insert_bookmark->execute([$user_id, $list_id]);
          $message[] = 'Đã lưu danh sách phát!';
       }
@@ -71,22 +71,22 @@ if(isset($_POST['save_list'])){
    <div class="row">
 
       <?php
-         $select_playlist = $conn->prepare("SELECT * FROM `playlist` WHERE id = ? and status = ? LIMIT 1");
+         $select_playlist = $db->prepare("SELECT * FROM `playlist` WHERE id = ? and status = ? LIMIT 1");
          $select_playlist->execute([$get_id, 'active']);
          if($select_playlist->rowCount() > 0){
             $fetch_playlist = $select_playlist->fetch(PDO::FETCH_ASSOC);
 
             $playlist_id = $fetch_playlist['id'];
 
-            $count_videos = $conn->prepare("SELECT * FROM `content` WHERE playlist_id = ?");
+            $count_videos = $db->prepare("SELECT * FROM `content` WHERE playlist_id = ?");
             $count_videos->execute([$playlist_id]);
             $total_videos = $count_videos->rowCount();
 
-            $select_tutor = $conn->prepare("SELECT * FROM `tutors` WHERE id = ? LIMIT 1");
+            $select_tutor = $db->prepare("SELECT * FROM `tutors` WHERE id = ? LIMIT 1");
             $select_tutor->execute([$fetch_playlist['tutor_id']]);
             $fetch_tutor = $select_tutor->fetch(PDO::FETCH_ASSOC);
 
-            $select_bookmark = $conn->prepare("SELECT * FROM `bookmark` WHERE user_id = ? AND playlist_id = ?");
+            $select_bookmark = $db->prepare("SELECT * FROM `bookmark` WHERE user_id = ? AND playlist_id = ?");
             $select_bookmark->execute([$user_id, $playlist_id]);
 
       ?>
@@ -148,7 +148,7 @@ if(isset($_POST['save_list'])){
    <div class="box-container">
 
       <?php
-         $select_content = $conn->prepare("SELECT * FROM `content` WHERE playlist_id = ? AND status = ? ORDER BY date DESC");
+         $select_content = $db->prepare("SELECT * FROM `content` WHERE playlist_id = ? AND status = ? ORDER BY date DESC");
          $select_content->execute([$get_id, 'active']);
          if($select_content->rowCount() > 0){
             while($fetch_content = $select_content->fetch(PDO::FETCH_ASSOC)){  

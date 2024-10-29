@@ -12,25 +12,25 @@ if(isset($_POST['tutor_fetch'])){
 
    $tutor_email = $_POST['tutor_email'];
    $tutor_email = filter_var($tutor_email, FILTER_SANITIZE_STRING);
-   $select_tutor = $conn->prepare('SELECT * FROM `tutors` WHERE email = ?');
+   $select_tutor = $db->prepare('SELECT * FROM `tutors` WHERE email = ?');
    $select_tutor->execute([$tutor_email]);
 
    $fetch_tutor = $select_tutor->fetch(PDO::FETCH_ASSOC);
    $tutor_id = $fetch_tutor['id'];
 
-   $count_playlists = $conn->prepare("SELECT * FROM `playlist` WHERE tutor_id = ?");
+   $count_playlists = $db->prepare("SELECT * FROM `playlist` WHERE tutor_id = ?");
    $count_playlists->execute([$tutor_id]);
    $total_playlists = $count_playlists->rowCount();
 
-   $count_contents = $conn->prepare("SELECT * FROM `content` WHERE tutor_id = ?");
+   $count_contents = $db->prepare("SELECT * FROM `content` WHERE tutor_id = ?");
    $count_contents->execute([$tutor_id]);
    $total_contents = $count_contents->rowCount();
 
-   $count_likes = $conn->prepare("SELECT * FROM `likes` WHERE tutor_id = ?");
+   $count_likes = $db->prepare("SELECT * FROM `likes` WHERE tutor_id = ?");
    $count_likes->execute([$tutor_id]);
    $total_likes = $count_likes->rowCount();
 
-   $count_comments = $conn->prepare("SELECT * FROM `comments` WHERE tutor_id = ?");
+   $count_comments = $db->prepare("SELECT * FROM `comments` WHERE tutor_id = ?");
    $count_comments->execute([$tutor_id]);
    $total_comments = $count_comments->rowCount();
 
@@ -91,13 +91,13 @@ if(isset($_POST['tutor_fetch'])){
    <div class="box-container">
 
       <?php
-         $select_courses = $conn->prepare("SELECT * FROM `playlist` WHERE tutor_id = ? AND status = ?");
+         $select_courses = $db->prepare("SELECT * FROM `playlist` WHERE tutor_id = ? AND status = ?");
          $select_courses->execute([$tutor_id, 'active']);
          if($select_courses->rowCount() > 0){
             while($fetch_course = $select_courses->fetch(PDO::FETCH_ASSOC)){
                $course_id = $fetch_course['id'];
 
-               $select_tutor = $conn->prepare("SELECT * FROM `tutors` WHERE id = ?");
+               $select_tutor = $db->prepare("SELECT * FROM `tutors` WHERE id = ?");
                $select_tutor->execute([$fetch_course['tutor_id']]);
                $fetch_tutor = $select_tutor->fetch(PDO::FETCH_ASSOC);
       ?>

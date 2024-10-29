@@ -37,18 +37,18 @@ if(isset($_COOKIE['user_id'])){
    <div class="box-container">
 
       <?php
-         $select_bookmark = $conn->prepare("SELECT * FROM `bookmark` WHERE user_id = ?");
+         $select_bookmark = $db->prepare("SELECT * FROM `bookmark` WHERE user_id = ?");
          $select_bookmark->execute([$user_id]);
          if($select_bookmark->rowCount() > 0){
             while($fetch_bookmark = $select_bookmark->fetch(PDO::FETCH_ASSOC)){
-               $select_courses = $conn->prepare("SELECT * FROM `playlist` WHERE id = ? AND status = ? ORDER BY date DESC");
+               $select_courses = $db->prepare("SELECT * FROM `playlist` WHERE id = ? AND status = ? ORDER BY date DESC");
                $select_courses->execute([$fetch_bookmark['playlist_id'], 'active']);
                if($select_courses->rowCount() > 0){
                   while($fetch_course = $select_courses->fetch(PDO::FETCH_ASSOC)){
 
                   $course_id = $fetch_course['id'];
 
-                  $select_tutor = $conn->prepare("SELECT * FROM `tutors` WHERE id = ?");
+                  $select_tutor = $db->prepare("SELECT * FROM `tutors` WHERE id = ?");
                   $select_tutor->execute([$fetch_course['tutor_id']]);
                   $fetch_tutor = $select_tutor->fetch(PDO::FETCH_ASSOC);
       ?>

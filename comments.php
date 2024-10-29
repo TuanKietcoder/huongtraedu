@@ -14,11 +14,11 @@ if(isset($_POST['delete_comment'])){
    $delete_id = $_POST['comment_id'];
    $delete_id = filter_var($delete_id, FILTER_SANITIZE_STRING);
 
-   $verify_comment = $conn->prepare("SELECT * FROM `comments` WHERE id = ?");
+   $verify_comment = $db->prepare("SELECT * FROM `comments` WHERE id = ?");
    $verify_comment->execute([$delete_id]);
 
    if($verify_comment->rowCount() > 0){
-      $delete_comment = $conn->prepare("DELETE FROM `comments` WHERE id = ?");
+      $delete_comment = $db->prepare("DELETE FROM `comments` WHERE id = ?");
       $delete_comment->execute([$delete_id]);
       $message[] = 'Bình luận đã được xóa thành công!';
    }else{
@@ -34,13 +34,13 @@ if(isset($_POST['update_now'])){
    $update_box = $_POST['update_box'];
    $update_box = filter_var($update_box, FILTER_SANITIZE_STRING);
 
-   $verify_comment = $conn->prepare("SELECT * FROM `comments` WHERE id = ? AND comment = ? ORDER BY date DESC");
+   $verify_comment = $db->prepare("SELECT * FROM `comments` WHERE id = ? AND comment = ? ORDER BY date DESC");
    $verify_comment->execute([$update_id, $update_box]);
 
    if($verify_comment->rowCount() > 0){
       $message[] = 'Bình luận đã được thêm vào!';
    }else{
-      $update_comment = $conn->prepare("UPDATE `comments` SET comment = ? WHERE id = ?");
+      $update_comment = $db->prepare("UPDATE `comments` SET comment = ? WHERE id = ?");
       $update_comment->execute([$update_box, $update_id]);
       $message[] = 'Bình luận đã được chỉnh sửa thành công!';
    }
@@ -72,7 +72,7 @@ if(isset($_POST['update_now'])){
    if(isset($_POST['edit_comment'])){
       $edit_id = $_POST['comment_id'];
       $edit_id = filter_var($edit_id, FILTER_SANITIZE_STRING);
-      $verify_comment = $conn->prepare("SELECT * FROM `comments` WHERE id = ? LIMIT 1");
+      $verify_comment = $db->prepare("SELECT * FROM `comments` WHERE id = ? LIMIT 1");
       $verify_comment->execute([$edit_id]);
       if($verify_comment->rowCount() > 0){
          $fetch_edit_comment = $verify_comment->fetch(PDO::FETCH_ASSOC);
@@ -102,11 +102,11 @@ if(isset($_POST['update_now'])){
    
    <div class="show-comments">
       <?php
-         $select_comments = $conn->prepare("SELECT * FROM `comments` WHERE user_id = ?");
+         $select_comments = $db->prepare("SELECT * FROM `comments` WHERE user_id = ?");
          $select_comments->execute([$user_id]);
          if($select_comments->rowCount() > 0){
             while($fetch_comment = $select_comments->fetch(PDO::FETCH_ASSOC)){
-               $select_content = $conn->prepare("SELECT * FROM `content` WHERE id = ?");
+               $select_content = $db->prepare("SELECT * FROM `content` WHERE id = ?");
                $select_content->execute([$fetch_comment['content_id']]);
                $fetch_content = $select_content->fetch(PDO::FETCH_ASSOC);
       ?>

@@ -49,26 +49,26 @@ if(isset($_COOKIE['user_id'])){
       </div>
 
       <?php
-         $select_tutors = $conn->prepare("SELECT * FROM `tutors`");
+         $select_tutors = $db->prepare("SELECT * FROM `tutors`");
          $select_tutors->execute();
          if($select_tutors->rowCount() > 0){
             while($fetch_tutor = $select_tutors->fetch(PDO::FETCH_ASSOC)){
 
                $tutor_id = $fetch_tutor['id'];
 
-               $count_playlists = $conn->prepare("SELECT * FROM `playlist` WHERE tutor_id = ?");
+               $count_playlists = $db->prepare("SELECT * FROM `playlist` WHERE tutor_id = ?");
                $count_playlists->execute([$tutor_id]);
                $total_playlists = $count_playlists->rowCount();
 
-               $count_contents = $conn->prepare("SELECT * FROM `content` WHERE tutor_id = ?");
+               $count_contents = $db->prepare("SELECT * FROM `content` WHERE tutor_id = ?");
                $count_contents->execute([$tutor_id]);
                $total_contents = $count_contents->rowCount();
 
-               $count_likes = $conn->prepare("SELECT * FROM `likes` WHERE tutor_id = ?");
+               $count_likes = $db->prepare("SELECT * FROM `likes` WHERE tutor_id = ?");
                $count_likes->execute([$tutor_id]);
                $total_likes = $count_likes->rowCount();
 
-               $count_comments = $conn->prepare("SELECT * FROM `comments` WHERE tutor_id = ?");
+               $count_comments = $db->prepare("SELECT * FROM `comments` WHERE tutor_id = ?");
                $count_comments->execute([$tutor_id]);
                $total_comments = $count_comments->rowCount();
       ?>

@@ -15,11 +15,11 @@ if(isset($_POST['remove'])){
       $content_id = $_POST['content_id'];
       $content_id = filter_var($content_id, FILTER_SANITIZE_STRING);
 
-      $verify_likes = $conn->prepare("SELECT * FROM `likes` WHERE user_id = ? AND content_id = ?");
+      $verify_likes = $db->prepare("SELECT * FROM `likes` WHERE user_id = ? AND content_id = ?");
       $verify_likes->execute([$user_id, $content_id]);
 
       if($verify_likes->rowCount() > 0){
-         $remove_likes = $conn->prepare("DELETE FROM `likes` WHERE user_id = ? AND content_id = ?");
+         $remove_likes = $db->prepare("DELETE FROM `likes` WHERE user_id = ? AND content_id = ?");
          $remove_likes->execute([$user_id, $content_id]);
          $message[] = 'removed from likes!';
       }
@@ -59,18 +59,18 @@ if(isset($_POST['remove'])){
    <div class="box-container">
 
    <?php
-      $select_likes = $conn->prepare("SELECT * FROM `likes` WHERE user_id = ?");
+      $select_likes = $db->prepare("SELECT * FROM `likes` WHERE user_id = ?");
       $select_likes->execute([$user_id]);
       if($select_likes->rowCount() > 0){
          while($fetch_likes = $select_likes->fetch(PDO::FETCH_ASSOC)){
 
-            $select_contents = $conn->prepare("SELECT * FROM `content` WHERE id = ? ORDER BY date DESC");
+            $select_contents = $db->prepare("SELECT * FROM `content` WHERE id = ? ORDER BY date DESC");
             $select_contents->execute([$fetch_likes['content_id']]);
 
             if($select_contents->rowCount() > 0){
                while($fetch_contents = $select_contents->fetch(PDO::FETCH_ASSOC)){
 
-               $select_tutors = $conn->prepare("SELECT * FROM `tutors` WHERE id = ?");
+               $select_tutors = $db->prepare("SELECT * FROM `tutors` WHERE id = ?");
                $select_tutors->execute([$fetch_contents['tutor_id']]);
                $fetch_tutor = $select_tutors->fetch(PDO::FETCH_ASSOC);
    ?>

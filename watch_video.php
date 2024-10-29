@@ -22,21 +22,21 @@ if(isset($_POST['like_content'])){
       $content_id = $_POST['content_id'];
       $content_id = filter_var($content_id, FILTER_SANITIZE_STRING);
 
-      $select_content = $conn->prepare("SELECT * FROM `content` WHERE id = ? LIMIT 1");
+      $select_content = $db->prepare("SELECT * FROM `content` WHERE id = ? LIMIT 1");
       $select_content->execute([$content_id]);
       $fetch_content = $select_content->fetch(PDO::FETCH_ASSOC);
 
       $tutor_id = $fetch_content['tutor_id'];
 
-      $select_likes = $conn->prepare("SELECT * FROM `likes` WHERE user_id = ? AND content_id = ?");
+      $select_likes = $db->prepare("SELECT * FROM `likes` WHERE user_id = ? AND content_id = ?");
       $select_likes->execute([$user_id, $content_id]);
 
       if($select_likes->rowCount() > 0){
-         $remove_likes = $conn->prepare("DELETE FROM `likes` WHERE user_id = ? AND content_id = ?");
+         $remove_likes = $db->prepare("DELETE FROM `likes` WHERE user_id = ? AND content_id = ?");
          $remove_likes->execute([$user_id, $content_id]);
          $message[] = 'Đã bị xóa khỏi lượt thích!';
       }else{
-         $insert_likes = $conn->prepare("INSERT INTO `likes`(user_id, tutor_id, content_id) VALUES(?,?,?)");
+         $insert_likes = $db->prepare("INSERT INTO `likes`(user_id, tutor_id, content_id) VALUES(?,?,?)");
          $insert_likes->execute([$user_id, $tutor_id, $content_id]);
          $message[] = 'Đã thêm vào lượt thích!';
       }
@@ -57,7 +57,7 @@ if(isset($_POST['add_comment'])){
       $content_id = $_POST['content_id'];
       $content_id = filter_var($content_id, FILTER_SANITIZE_STRING);
 
-      $select_content = $conn->prepare("SELECT * FROM `content` WHERE id = ? LIMIT 1");
+      $select_content = $db->prepare("SELECT * FROM `content` WHERE id = ? LIMIT 1");
       $select_content->execute([$content_id]);
       $fetch_content = $select_content->fetch(PDO::FETCH_ASSOC);
 
@@ -65,13 +65,13 @@ if(isset($_POST['add_comment'])){
 
       if($select_content->rowCount() > 0){
 
-         $select_comment = $conn->prepare("SELECT * FROM `comments` WHERE content_id = ? AND user_id = ? AND tutor_id = ? AND comment = ?");
+         $select_comment = $db->prepare("SELECT * FROM `comments` WHERE content_id = ? AND user_id = ? AND tutor_id = ? AND comment = ?");
          $select_comment->execute([$content_id, $user_id, $tutor_id, $comment_box]);
 
          if($select_comment->rowCount() > 0){
             $message[] = 'Bình luận đã được thêm vào!';
          }else{
-            $insert_comment = $conn->prepare("INSERT INTO `comments`(id, content_id, user_id, tutor_id, comment) VALUES(?,?,?,?,?)");
+            $insert_comment = $db->prepare("INSERT INTO `comments`(id, content_id, user_id, tutor_id, comment) VALUES(?,?,?,?,?)");
             $insert_comment->execute([$id, $content_id, $user_id, $tutor_id, $comment_box]);
             $message[] = 'Bình luận mới được thêm vào!';
          }
@@ -91,11 +91,11 @@ if(isset($_POST['delete_comment'])){
    $delete_id = $_POST['comment_id'];
    $delete_id = filter_var($delete_id, FILTER_SANITIZE_STRING);
 
-   $verify_comment = $conn->prepare("SELECT * FROM `comments` WHERE id = ?");
+   $verify_comment = $db->prepare("SELECT * FROM `comments` WHERE id = ?");
    $verify_comment->execute([$delete_id]);
 
    if($verify_comment->rowCount() > 0){
-      $delete_comment = $conn->prepare("DELETE FROM `comments` WHERE id = ?");
+      $delete_comment = $db->prepare("DELETE FROM `comments` WHERE id = ?");
       $delete_comment->execute([$delete_id]);
       $message[] = 'Bình luận đã được xóa thành công!';
    }else{
@@ -111,13 +111,13 @@ if(isset($_POST['update_now'])){
    $update_box = $_POST['update_box'];
    $update_box = filter_var($update_box, FILTER_SANITIZE_STRING);
 
-   $verify_comment = $conn->prepare("SELECT * FROM `comments` WHERE id = ? AND comment = ?");
+   $verify_comment = $db->prepare("SELECT * FROM `comments` WHERE id = ? AND comment = ?");
    $verify_comment->execute([$update_id, $update_box]);
 
    if($verify_comment->rowCount() > 0){
       $message[] = 'Bình luận đã được thêm vào!';
    }else{
-      $update_comment = $conn->prepare("UPDATE `comments` SET comment = ? WHERE id = ?");
+      $update_comment = $db->prepare("UPDATE `comments` SET comment = ? WHERE id = ?");
       $update_comment->execute([$update_box, $update_id]);
       $message[] = 'Bình luận đã được chỉnh sửa thành công!';
    }
@@ -149,7 +149,7 @@ if(isset($_POST['update_now'])){
    if(isset($_POST['edit_comment'])){
       $edit_id = $_POST['comment_id'];
       $edit_id = filter_var($edit_id, FILTER_SANITIZE_STRING);
-      $verify_comment = $conn->prepare("SELECT * FROM `comments` WHERE id = ? LIMIT 1");
+      $verify_comment = $db->prepare("SELECT * FROM `comments` WHERE id = ? LIMIT 1");
       $verify_comment->execute([$edit_id]);
       if($verify_comment->rowCount() > 0){
          $fetch_edit_comment = $verify_comment->fetch(PDO::FETCH_ASSOC);
@@ -177,20 +177,20 @@ if(isset($_POST['update_now'])){
 <section class="watch-video">
 
    <?php
-      $select_content = $conn->prepare("SELECT * FROM `content` WHERE id = ? AND status = ?");
+      $select_content = $db->prepare("SELECT * FROM `content` WHERE id = ? AND status = ?");
       $select_content->execute([$get_id, 'active']);
       if($select_content->rowCount() > 0){
          while($fetch_content = $select_content->fetch(PDO::FETCH_ASSOC)){
             $content_id = $fetch_content['id'];
 
-            $select_likes = $conn->prepare("SELECT * FROM `likes` WHERE content_id = ?");
+            $select_likes = $db->prepare("SELECT * FROM `likes` WHERE content_id = ?");
             $select_likes->execute([$content_id]);
             $total_likes = $select_likes->rowCount();  
 
-            $verify_likes = $conn->prepare("SELECT * FROM `likes` WHERE user_id = ? AND content_id = ?");
+            $verify_likes = $db->prepare("SELECT * FROM `likes` WHERE user_id = ? AND content_id = ?");
             $verify_likes->execute([$user_id, $content_id]);
 
-            $select_tutor = $conn->prepare("SELECT * FROM `tutors` WHERE id = ? LIMIT 1");
+            $select_tutor = $db->prepare("SELECT * FROM `tutors` WHERE id = ? LIMIT 1");
             $select_tutor->execute([$fetch_content['tutor_id']]);
             $fetch_tutor = $select_tutor->fetch(PDO::FETCH_ASSOC);
    ?>
@@ -253,11 +253,11 @@ if(isset($_POST['update_now'])){
    
    <div class="show-comments">
       <?php
-         $select_comments = $conn->prepare("SELECT * FROM `comments` WHERE content_id = ?");
+         $select_comments = $db->prepare("SELECT * FROM `comments` WHERE content_id = ?");
          $select_comments->execute([$get_id]);
          if($select_comments->rowCount() > 0){
             while($fetch_comment = $select_comments->fetch(PDO::FETCH_ASSOC)){   
-               $select_commentor = $conn->prepare("SELECT * FROM `users` WHERE id = ?");
+               $select_commentor = $db->prepare("SELECT * FROM `users` WHERE id = ?");
                $select_commentor->execute([$fetch_comment['user_id']]);
                $fetch_commentor = $select_commentor->fetch(PDO::FETCH_ASSOC);
       ?>

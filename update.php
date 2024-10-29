@@ -11,7 +11,7 @@ if(isset($_COOKIE['user_id'])){
 
 if(isset($_POST['submit'])){
 
-   $select_user = $conn->prepare("SELECT * FROM `users` WHERE id = ? LIMIT 1");
+   $select_user = $db->prepare("SELECT * FROM `users` WHERE id = ? LIMIT 1");
    $select_user->execute([$user_id]);
    $fetch_user = $select_user->fetch(PDO::FETCH_ASSOC);
 
@@ -22,7 +22,7 @@ if(isset($_POST['submit'])){
    $name = filter_var($name, FILTER_SANITIZE_STRING);
 
   if(!empty($name)){
-   $update_name = $conn->prepare("UPDATE `users` SET name = ? WHERE id = ?");
+   $update_name = $db->prepare("UPDATE `users` SET name = ? WHERE id = ?");
    $update_name->execute([$name, $user_id]);
    $message[] = 'Tên người dùng được cập nhật thành công!';
   }
@@ -31,12 +31,12 @@ if(isset($_POST['submit'])){
    $email = filter_var($email, FILTER_SANITIZE_STRING);
 
    if(!empty($email)){
-      $select_email = $conn->prepare("SELECT email FROM `users` WHERE email = ?");
+      $select_email = $db->prepare("SELECT email FROM `users` WHERE email = ?");
       $select_email->execute([$email]);
       if($select_email->rowCount() > 0){
          $message[] = 'Email đã được sử dụng!';
       }else{
-         $update_email = $conn->prepare("UPDATE `users` SET email = ? WHERE id = ?");
+         $update_email = $db->prepare("UPDATE `users` SET email = ? WHERE id = ?");
          $update_email->execute([$email, $user_id]);
          $message[] = 'Email được cập nhật thành công!';
       }
@@ -54,7 +54,7 @@ if(isset($_POST['submit'])){
       if($image_size > 200000000){
          $message[] = 'Kích thước hình ảnh quá lớn!';
       }else{
-         $update_image = $conn->prepare("UPDATE `users` SET `image` = ? WHERE id = ?");
+         $update_image = $db->prepare("UPDATE `users` SET `image` = ? WHERE id = ?");
          $update_image->execute([$rename, $user_id]);
          move_uploaded_file($image_tmp_name, $image_folder);
          if($prev_image != '' AND $prev_image != $rename){
@@ -79,7 +79,7 @@ if(isset($_POST['submit'])){
          $message[] = 'xác nhận mật khẩu không đúng!';
       }else{
          if($new_pass != $empty_pass){
-            $update_pass = $conn->prepare("UPDATE `users` SET password = ? WHERE id = ?");
+            $update_pass = $db->prepare("UPDATE `users` SET password = ? WHERE id = ?");
             $update_pass->execute([$cpass, $user_id]);
             $message[] = 'Mật khẩu được cập nhật thành công!';
          }else{

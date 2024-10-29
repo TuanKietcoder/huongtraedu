@@ -9,15 +9,15 @@ if(isset($_COOKIE['user_id'])){
    header('location:login.php');
 }
 
-$select_likes = $conn->prepare("SELECT * FROM `likes` WHERE user_id = ?");
+$select_likes = $db->prepare("SELECT * FROM `likes` WHERE user_id = ?");
 $select_likes->execute([$user_id]);
 $total_likes = $select_likes->rowCount();
 
-$select_comments = $conn->prepare("SELECT * FROM `comments` WHERE user_id = ?");
+$select_comments = $db->prepare("SELECT * FROM `comments` WHERE user_id = ?");
 $select_comments->execute([$user_id]);
 $total_comments = $select_comments->rowCount();
 
-$select_bookmark = $conn->prepare("SELECT * FROM `bookmark` WHERE user_id = ?");
+$select_bookmark = $db->prepare("SELECT * FROM `bookmark` WHERE user_id = ?");
 $select_bookmark->execute([$user_id]);
 $total_bookmarked = $select_bookmark->rowCount();
 
