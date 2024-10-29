@@ -15,7 +15,6 @@ $select_bookmark = $db->prepare("SELECT COUNT(user_id) FROM `bookmark` WHERE use
 $select_bookmark->bind_param("s", $user_id);
 $select_bookmark->execute();
 $total_bookmarked = $select_bookmark->get_result()->fetch_assoc()["count"];
-
 ?>
 
 <!DOCTYPE html>
@@ -30,24 +29,17 @@ $total_bookmarked = $select_bookmark->get_result()->fetch_assoc()["count"];
         <h1 class="heading">Tùy chọn nhanh</h1>
         <div class="box-container">
 
-            <?php
-                if($user_id != ''){
-            ?>
-            <div class="box">
-                <h3 class="title">Thích và bình luận</h3>
-                <p>Lượt thích: <span><?= $total_likes; ?></span></p>
-                <a href="likes.php" class="inline-btn">Xem lượt thích</a>
-                <p>Lượt bình luận: <span><?= $total_comments; ?></span></p>
-                <a href="comments.php" class="inline-btn">Xem bình luận</a>
-                <p>Lưu: <span><?= $total_bookmarked; ?></span></p>
-                <a href="bookmark.php" class="inline-btn">Danh sách đã lưu</a>
-            </div>
-            <?php
-                }else{ 
-            ?>
-            <?php
-            }
-            ?>
+            <?php if (isset($user_id)) { ?>
+                    <div class="box">
+                        <h3 class="title">Thích và bình luận</h3>
+                        <p>Lượt thích: <span><?= $total_likes; ?></span></p>
+                        <a href="likes.php" class="inline-btn">Xem lượt thích</a>
+                        <p>Lượt bình luận: <span><?= $total_comments; ?></span></p>
+                        <a href="comments.php" class="inline-btn">Xem bình luận</a>
+                        <p>Lưu: <span><?= $total_bookmarked; ?></span></p>
+                        <a href="bookmark.php" class="inline-btn">Danh sách đã lưu</a>
+                    </div>
+            <?php } ?>
 
             <div class="box">
                 <h3 class="title">Gợi ý tìm kiếm</h3>
